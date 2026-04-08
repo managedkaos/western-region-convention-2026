@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Western Region Convention Schedule</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #B8860B;
+    --gold-light: #FAC755;
+    --gold-bg: #FAEEDA;
+    --black: #1a1a1a;
+    --white: #ffffff;
+    --gray-50: #F8F7F2;
+    --gray-100: #ECEAE0;
+    --gray-200: #D3D1C7;
+    --gray-400: #888780;
+    --gray-700: #444441;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--gray-50);
+    color: var(--black);
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--black);
+    color: var(--white);
+    padding: 2.5rem 1.5rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 40px,
+      rgba(184,134,11,0.06) 40px,
+      rgba(184,134,11,0.06) 80px
+    );
+  }
+
+  .header-inner { position: relative; z-index: 1; }
+
+  .greek-letters {
+    font-size: 2rem;
+    letter-spacing: 0.3em;
+    color: var(--gold-light);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  header h1 {
+    font-size: clamp(1.3rem, 4vw, 2rem);
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.02em;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+    color: var(--gold-light);
+    margin-top: 0.5rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-100);
+    padding: 0;
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+  }
+
+  nav::-webkit-scrollbar { display: none; }
+
+  nav button {
+    flex: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 1rem 1.25rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--gray-400);
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  nav button:hover { color: var(--black); }
+
+  nav button.active {
+    color: var(--black);
+    border-bottom-color: var(--gold);
+  }
+
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 4rem;
+  }
+
+  .day-section { display: none; }
+  .day-section.active { display: block; }
+
+  .day-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.25rem;
+    padding-top: 0.5rem;
+  }
+
+  .day-badge {
+    background: var(--black);
+    color: var(--gold-light);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 100px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .day-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--black);
+  }
+
+  .events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .event-card {
+    background: var(--white);
+    border: 0.5px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.75rem 1rem;
+    align-items: start;
+  }
+
+  .event-time {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--gold);
+    white-space: nowrap;
+    padding-top: 2px;
+    letter-spacing: 0.02em;
+  }
+
+  .event-info {}
+
+  .event-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--black);
+    line-height: 1.4;
+    margin-bottom: 0.35rem;
+  }
+
+  .event-location {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.78rem;
+    color: var(--gray-400);
+  }
+
+  .event-location svg {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+  }
+
+  .ticket-badge {
+    display: inline-block;
+    background: var(--gold-bg);
+    color: #633806;
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 100px;
+    margin-left: 8px;
+    letter-spacing: 0.04em;
+    vertical-align: middle;
+    text-transform: uppercase;
+  }
+
+  .offsite-badge {
+    display: inline-block;
+    background: #EAF3DE;
+    color: #3B6D11;
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 100px;
+    margin-left: 8px;
+    letter-spacing: 0.04em;
+    vertical-align: middle;
+    text-transform: uppercase;
+  }
+
+  /* Attire well */
+  .attire-well {
+    background: var(--black);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .attire-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .attire-body { flex: 1; min-width: 0; }
+
+  .attire-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 0.35rem;
+  }
+
+  .attire-row {
+    font-size: 0.85rem;
+    color: #e8e6df;
+    line-height: 1.5;
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+    margin-bottom: 0.2rem;
+  }
+
+  .attire-row:last-child { margin-bottom: 0; }
+
+  .attire-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+    margin-top: 7px;
+  }
+
+  .attire-section-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 0.65rem;
+    margin-bottom: 0.25rem;
+    opacity: 0.8;
+  }
+
+  /* Dress code page */
+  .dress-day {
+    background: var(--white);
+    border: 0.5px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .dress-day-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 0.5px solid var(--gray-100);
+  }
+
+  .dress-day-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--black);
+  }
+
+  .dress-occasion {
+    margin-bottom: 0.85rem;
+  }
+
+  .dress-occasion:last-child { margin-bottom: 0; }
+
+  .dress-occasion-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.4rem;
+  }
+
+  .dress-item {
+    font-size: 0.88rem;
+    color: var(--gray-700);
+    line-height: 1.5;
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    margin-bottom: 0.2rem;
+  }
+
+  .dress-item:last-child { margin-bottom: 0; }
+
+  .dress-bullet {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+    margin-top: 7px;
+  }
+
+  .count-pill {
+    background: var(--gray-100);
+    color: var(--gray-700);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 100px;
+    margin-left: auto;
+  }
+
+  @media (max-width: 500px) {
+    .event-card {
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+    }
+    .event-time {
+      font-size: 0.72rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="greek-letters">ΑɸΑ</div>
+    <h1>My Western Region Convention Schedule</h1>
+    <div class="subtitle">Tucson, Arizona · April 2026</div>
+  </div>
+</header>
+
+<nav id="day-nav">
+  <button class="active" onclick="showDay('wed')">Wed Apr 8</button>
+  <button onclick="showDay('thu')">Thu Apr 9</button>
+  <button onclick="showDay('fri')">Fri Apr 10</button>
+  <button onclick="showDay('sat')">Sat Apr 11</button>
+  <button onclick="showDay('dress')">Dress Code</button>
+</nav>
+
+<main>
+
+  <!-- Wednesday -->
+  <section class="day-section active" id="day-wed">
+    <div class="day-header">
+      <span class="day-badge">Wednesday</span>
+      <span class="day-title">April 8, 2026</span>
+      <span class="count-pill">1 event</span>
+    </div>
+    <div class="attire-well">
+      <div class="attire-icon">👔</div>
+      <div class="attire-body">
+        <div class="attire-label">Dress Code — Business Casual</div>
+        <div class="attire-row"><div class="attire-dot"></div>Alpha polo with slacks</div>
+        <div class="attire-row"><div class="attire-dot"></div>Sports coat with dress shirt (tie optional) and slacks</div>
+      </div>
+    </div>
+    <div class="events-list">
+      <div class="event-card">
+        <div class="event-time">9:00 PM – 12:00 AM</div>
+        <div class="event-info">
+          <div class="event-name">Brotherhood Smoke</div>
+          <div class="event-location">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Grand Ballroom Patio
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Thursday -->
+  <section class="day-section" id="day-thu">
+    <div class="day-header">
+      <span class="day-badge">Thursday</span>
+      <span class="day-title">April 9, 2026</span>
+      <span class="count-pill">5 events</span>
+    </div>
+    <div class="attire-well">
+      <div class="attire-icon">👔</div>
+      <div class="attire-body">
+        <div class="attire-label">Dress Code — Business Casual</div>
+        <div class="attire-row"><div class="attire-dot"></div>Alpha polo with slacks</div>
+        <div class="attire-row"><div class="attire-dot"></div>Sports coat with dress shirt (tie optional) and slacks</div>
+      </div>
+    </div>
+    <div class="events-list">
+      <div class="event-card">
+        <div class="event-time">8:00 AM – 5:00 PM</div>
+        <div class="event-info">
+          <div class="event-name">Check-In, Badge Pickup, &amp; Delegate Certification</div>
+          <div class="event-location">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Living Room
+          </div>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-time">9:00 AM – 12:00 PM</div>
+        <div class="event-info">
+          <div class="event-name">African American Board Leadership Institute <span style="font-weight:400;color:var(--gray-400)">(Alpha University Session I)</span></div>
+          <div class="event-location">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Bonsai
+          </div>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-time">2:30 PM – 3:15 PM</div>
+        <div class="event-info">
+          <div class="event-name">General Session I: Fireside Chat w/ Br. James White &amp; Past WRVP Br. Dondrell Swanson</div>
+          <div class="event-location">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Grand Ballroom
+          </div>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-time">3:30 PM – 6:30 PM</div>
+        <div class="event-info">
+          <div class="event-name">Whiskey Tasting Experience <span class="ticket-badge">Ticket Required</span><span class="offsite-badge">Offsite</span></div>
+          <div class="event-location">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Whiskey Del Bac
+          </div>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-time">8:30 PM – 11:00 PM</div>
+        <div class="event-info">
+          <div class="event-name">Welcome to Tucson Reception</div>
+          <div class="event-location">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Grand Ballroom Foyer
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Friday -->
+  <section class="day-section" id="day-fri">
+    <div class="day-header">
+      <span class="day-badge">Friday</span>
+      <span class="day-title">April 10, 2026</span>
+      <span class="count-pill">5 events</span>
+    </div>
+    <div class="attire-well">
+      <div class="attire-icon">🤵</div>
+      <div class="attire-body">
+        <div class="attire-label">Dress Code — Business Attire</div>
+        <div class="attire-section-label">Business Sessions, Meals &amp; Workshops</div>
+        <div class="attire-row"><div class="attire-dot"></div>Suit and tie, dress shirt, dress shoes &amp; socks</div>
+        <div class="attire-row"><div class="attire-dot"></div>No bright red, green, pink, yellow, or orange</div>
+        <div class="attire-section-label">Pageant / Step Show — Attire of Choice</div>
+        <div class="attire-row"><div class="attire-dot"></div>Rep your school, chapter of initiation, or current chapter</div>
+      </div>
+    </div>
+    <div class="events-list">
+      <div class="event-card">
+        <div class="event-time">12:30 PM – 2:30 PM</div>
+        <div class="event-info">
+          <div class="event-name">Fraternal Luncheon</div>
+          <div class="event-location">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Grand Ballroom
+          </div>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-time">2:45 PM – 3:45 PM</div>
+        <div class="event-info">
+          <div class="event-name">Economic Development Track: Sponsor | JP Morgan Chase <span style="font-weight:400;color:var(--gray-400)">(Alpha University Session V)</span></div>
+          <div class="event-location">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Boojum
+          </div>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-time">5:00 PM – 6:00 PM</div>
+        <div class="event-info">
+          <div class="event-name">Southern California District Caucus</div>
+          <div class="event-location">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Grand Ballroom
+          </div>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-time">8:00 PM – 10:00 PM</div>
+        <div class="event-info">
+          <div class="event-name">Step Show Featuring Miss Black &amp; Gold</div>
+          <div class="event-location">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Grand Ballroom
+          </div>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-time">10:00 PM – 12:00 AM</div>
+        <div class="event-info">
+          <div class="event-name">Step Show After Party</div>
+          <div class="event-location">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Grand Ballroom
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Saturday -->
+  <section class="day-section" id="day-sat">
+    <div class="day-header">
+      <span class="day-badge">Saturday</span>
+      <span class="day-title">April 11, 2026</span>
+      <span class="count-pill">10 events</span>
+    </div>
+    <div class="attire-well">
+      <div class="attire-icon">🎩</div>
+      <div class="attire-body">
+        <div class="attire-label">Dress Code — Alpha Attire</div>
+        <div class="attire-section-label">Business Sessions, Meals &amp; Workshops</div>
+        <div class="attire-row"><div class="attire-dot"></div>Black fraternal blazer or black suit</div>
+        <div class="attire-row"><div class="attire-dot"></div>White dress shirt</div>
+        <div class="attire-row"><div class="attire-dot"></div>Black and/or gold tie</div>
+        <div class="attire-row"><div class="attire-dot"></div>Black dress shoes &amp; socks</div>
+        <div class="attire-section-label">Old Gold &amp; Black Banquet</div>
+        <div class="attire-row"><div class="attire-dot"></div>Black suit with tie, or tuxedo</div>
+      </div>
+    </div>
+    <div class="events-list">
+      <div class="event-card">
+        <div class="event-time">9:30 AM – 10:30 AM</div>
+        <div class="event-info">
+          <div class="event-name">Fourth Business Session</div>
+          <div class="event-location">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Grand Ballroom
+          </div>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-time">10:30 AM – 11:30 AM</div>
+        <div class="event-info">
+          <div class="event-name">Fifth Business Session</div>
+          <div class="event-location">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Grand Ballroom
+          </div>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-time">11:15 AM – 12:00 PM</div>
+        <div class="event-info">
+          <div class="event-name">Sixth Business Session</div>
+          <div class="event-location">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Grand Ballroom
+          </div>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-time">12:00 PM – 12:30 PM</div>
+        <div class="event-info">
+          <div class="event-name">Convention Photo</div>
+          <div class="event-location">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            TBD
+          </div>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-time">12:45 PM – 2:30 PM</div>
+        <div class="event-info">
+          <div class="event-name">College Brothers Luncheon &amp; Oratorical Competition + AVP Candidate Forum + Awards</div>
+          <div class="event-location">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Grand Ballroom
+          </div>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-time">2:45 PM – 4:00 PM</div>
+        <div class="event-info">
+          <div class="event-name">Seventh Business Session</div>
+          <div class="event-location">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Bonsai &amp; Boojum
+          </div>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-time">4:00 PM – 5:00 PM</div>
+        <div class="event-info">
+          <div class="event-name">Omega Memorial Service</div>
+          <div class="event-location">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Bonsai &amp; Boojum
+          </div>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-time">6:30 PM – 7:30 PM</div>
+        <div class="event-info">
+          <div class="event-name">Old Gold &amp; Black Reception</div>
+          <div class="event-location">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Grand Ballroom Foyer
+          </div>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-time">7:30 PM – 9:30 PM</div>
+        <div class="event-info">
+          <div class="event-name">Old Gold &amp; Black Gala</div>
+          <div class="event-location">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Grand Ballroom
+          </div>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-time">10:00 PM – 11:00 PM</div>
+        <div class="event-info">
+          <div class="event-name">Post-Gala Entertainment Featuring Live Band</div>
+          <div class="event-location">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Grand Ballroom
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dress Code -->
+  <section class="day-section" id="day-dress">
+    <div class="day-header">
+      <span class="day-badge">All Days</span>
+      <span class="day-title">Convention Dress Code</span>
+    </div>
+
+    <div class="dress-day">
+      <div class="dress-day-header">
+        <span class="day-badge">Wed &amp; Thu</span>
+        <span class="dress-day-name">April 8–9 · Business Casual</span>
+      </div>
+      <div class="dress-occasion">
+        <div class="dress-item"><div class="dress-bullet"></div>Alpha polo with slacks</div>
+        <div class="dress-item"><div class="dress-bullet"></div>Sports coat with dress shirt (tie optional) and slacks</div>
+      </div>
+    </div>
+
+    <div class="dress-day">
+      <div class="dress-day-header">
+        <span class="day-badge">Friday</span>
+        <span class="dress-day-name">April 10 · Business Attire</span>
+      </div>
+      <div class="dress-occasion">
+        <div class="dress-occasion-label">Business Sessions, Meal Functions, Workshops &amp; Competitions</div>
+        <div class="dress-item"><div class="dress-bullet"></div>Suit and tie, dress shirt, dress shoes &amp; socks</div>
+        <div class="dress-item"><div class="dress-bullet"></div>No bright red, green, pink, yellow, or orange</div>
+      </div>
+      <div class="dress-occasion">
+        <div class="dress-occasion-label">Pageant / Step Show — Attire of Choice</div>
+        <div class="dress-item"><div class="dress-bullet"></div>Rep your school</div>
+        <div class="dress-item"><div class="dress-bullet"></div>Rep your chapter of initiation</div>
+        <div class="dress-item"><div class="dress-bullet"></div>Rep your current chapter</div>
+      </div>
+    </div>
+
+    <div class="dress-day">
+      <div class="dress-day-header">
+        <span class="day-badge">Saturday</span>
+        <span class="dress-day-name">April 11 · Alpha Attire</span>
+      </div>
+      <div class="dress-occasion">
+        <div class="dress-occasion-label">Business Sessions, Meal Functions, Workshops &amp; Competitions</div>
+        <div class="dress-item"><div class="dress-bullet"></div>Black fraternal blazer or black suit</div>
+        <div class="dress-item"><div class="dress-bullet"></div>White dress shirt</div>
+        <div class="dress-item"><div class="dress-bullet"></div>Black and/or gold tie</div>
+        <div class="dress-item"><div class="dress-bullet"></div>Black dress shoes &amp; socks</div>
+      </div>
+      <div class="dress-occasion">
+        <div class="dress-occasion-label">Old Gold &amp; Black Banquet</div>
+        <div class="dress-item"><div class="dress-bullet"></div>Black suit with tie, or tuxedo</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  function showDay(id) {
+    document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById('day-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  const today = new Date();
+  const dateMap = { wed: new Date('2026-04-08'), thu: new Date('2026-04-09'), fri: new Date('2026-04-10'), sat: new Date('2026-04-11') };
+  const days = ['wed','thu','fri','sat'];
+  const navDays = ['wed','thu','fri','sat','dress'];
+  let defaultDay = null;
+  for (const d of days) {
+    if (today <= dateMap[d]) { defaultDay = d; break; }
+  }
+  if (defaultDay && defaultDay !== 'wed') {
+    document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById('day-' + defaultDay).classList.add('active');
+    const idx = navDays.indexOf(defaultDay);
+    document.querySelectorAll('nav button')[idx].classList.add('active');
+  }
+</script>
+
+</body>
+</html>
