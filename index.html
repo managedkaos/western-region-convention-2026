@@ -81,6 +81,7 @@
     border-bottom: 1px solid var(--gray-100);
     padding: 0;
     display: flex;
+    justify-content: center;
     overflow-x: auto;
     scrollbar-width: none;
     position: sticky;
@@ -139,6 +140,13 @@
     letter-spacing: 0.06em;
     text-transform: uppercase;
     white-space: nowrap;
+  }
+
+  .day-header .day-badge {
+    font-size: 1.15rem;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: normal;
   }
 
   .day-title {
@@ -492,7 +500,7 @@
       <span class="count-pill">5 events</span>
     </div>
     <div class="attire-well">
-      <div class="attire-icon">🤵</div>
+      <div class="attire-icon">🤵🏾</div>
       <div class="attire-body">
         <div class="attire-label">Dress Code — Business Attire</div>
         <div class="attire-section-label">Business Sessions, Meals &amp; Workshops</div>
@@ -745,13 +753,13 @@
     event.target.classList.add('active');
   }
 
-  const today = new Date();
-  const dateMap = { wed: new Date('2026-04-08'), thu: new Date('2026-04-09'), fri: new Date('2026-04-10'), sat: new Date('2026-04-11') };
+  const todayStr = new Date().toLocaleDateString('en-CA');
+  const dateMap = { wed: '2026-04-08', thu: '2026-04-09', fri: '2026-04-10', sat: '2026-04-11' };
   const days = ['wed','thu','fri','sat'];
   const navDays = ['wed','thu','fri','sat','dress'];
   let defaultDay = null;
   for (const d of days) {
-    if (today <= dateMap[d]) { defaultDay = d; break; }
+    if (todayStr <= dateMap[d]) { defaultDay = d; break; }
   }
   if (defaultDay && defaultDay !== 'wed') {
     document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
